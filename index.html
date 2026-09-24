@@ -1,0 +1,1123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08080d">
+
+<title>AnimeVault — Anime Image Finder</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(120, 60, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(0, 200, 255, 0.12), transparent 30%),
+        #08080d;
+}
+
+/* ================= HEADER ================= */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 18px 5%;
+    background: rgba(8, 8, 13, 0.82);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.nav {
+    max-width: 1400px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    background: linear-gradient(90deg, #9b5cff, #00d9ff);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.logo small {
+    font-size: 10px;
+    color: #777;
+    display: block;
+    letter-spacing: 2px;
+    margin-top: 2px;
+}
+
+.nav-button {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    cursor: pointer;
+}
+
+/* ================= HERO ================= */
+
+.hero {
+    max-width: 1000px;
+    margin: auto;
+    padding: 80px 20px 50px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 7vw, 82px);
+    line-height: 0.95;
+    font-weight: 900;
+    letter-spacing: -4px;
+}
+
+.hero h1 span {
+    background: linear-gradient(
+        90deg,
+        #9b5cff,
+        #00d9ff,
+        #ff4fd8
+    );
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    max-width: 650px;
+    margin: 22px auto 30px;
+    color: #aaa;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* ================= SEARCH ================= */
+
+.search-container {
+    max-width: 850px;
+    margin: auto;
+}
+
+.search-box {
+    display: flex;
+    padding: 7px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+    padding: 17px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+}
+
+.search-box input::placeholder {
+    color: #777;
+}
+
+.search-box button {
+    border: none;
+    border-radius: 13px;
+    padding: 0 28px;
+    background: linear-gradient(135deg, #8d4dff, #00bfff);
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-box button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+}
+
+/* ================= QUICK SEARCH ================= */
+
+.quick {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.quick button {
+    border: 1px solid rgba(255,255,255,0.09);
+    background: rgba(255,255,255,0.04);
+    color: #aaa;
+    border-radius: 100px;
+    padding: 8px 13px;
+    cursor: pointer;
+}
+
+.quick button:hover {
+    color: white;
+    border-color: #8d4dff;
+}
+
+/* ================= STATUS ================= */
+
+.status {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 20px;
+    color: #888;
+    min-height: 25px;
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    color: #aaa;
+}
+
+.spinner {
+    width: 38px;
+    height: 38px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #9b5cff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: auto auto 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ================= GALLERY ================= */
+
+.gallery {
+    max-width: 1400px;
+    margin: auto;
+    padding: 0 20px 70px;
+
+    columns: 5 220px;
+    column-gap: 15px;
+}
+
+.card {
+    break-inside: avoid;
+    margin-bottom: 15px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    background: #111117;
+    border: 1px solid rgba(255,255,255,0.07);
+    cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(155,92,255,0.6);
+}
+
+.card img {
+    width: 100%;
+    display: block;
+    min-height: 120px;
+    background: #111;
+    object-fit: cover;
+}
+
+.card-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    padding: 45px 13px 13px;
+
+    background: linear-gradient(
+        transparent,
+        rgba(0,0,0,0.95)
+    );
+
+    opacity: 0;
+    transition: 0.25s;
+}
+
+.card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-title {
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-source {
+    color: #999;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+/* ================= EMPTY ================= */
+
+.empty {
+    text-align: center;
+    padding: 70px 20px;
+    color: #777;
+}
+
+.empty h2 {
+    color: #ddd;
+    margin-bottom: 10px;
+}
+
+/* ================= MODAL ================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(10px);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-box {
+    width: min(1100px, 100%);
+    max-height: 92vh;
+    overflow: auto;
+
+    background: #111117;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+
+    box-shadow: 0 30px 100px rgba(0,0,0,0.7);
+}
+
+.modal-image {
+    width: 100%;
+    max-height: 65vh;
+    object-fit: contain;
+    display: block;
+    background: #050507;
+}
+
+.modal-content {
+    padding: 20px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.modal-info {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+.modal-buttons a,
+.close-button {
+    display: inline-block;
+    padding: 11px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.06);
+    color: white;
+    cursor: pointer;
+}
+
+.modal-buttons a.primary {
+    background: linear-gradient(135deg, #8d4dff, #00bfff);
+    border: none;
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: #666;
+    font-size: 12px;
+}
+
+footer a {
+    color: #9b5cff;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+
+    header {
+        padding: 14px 15px;
+    }
+
+    .hero {
+        padding-top: 55px;
+    }
+
+    .hero h1 {
+        letter-spacing: -2px;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box button {
+        min-height: 50px;
+    }
+
+    .gallery {
+        columns: 2 140px;
+        padding: 0 10px 50px;
+        column-gap: 9px;
+    }
+
+    .card {
+        margin-bottom: 9px;
+        border-radius: 10px;
+    }
+
+    .card-overlay {
+        opacity: 1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="nav">
+        <div class="logo">
+            <span>AnimeVault</span>
+            <small>IMAGE FINDER</small>
+        </div>
+
+        <button class="nav-button" onclick="randomSearch()">
+            ✦ Random
+        </button>
+    </div>
+</header>
+
+
+<section class="hero">
+
+    <h1>
+        Find Your <span>Anime</span>
+        <br>
+        Images.
+    </h1>
+
+    <p>
+        Search thousands of freely available images from Wikimedia Commons.
+        Find characters, art, wallpapers and more.
+    </p>
+
+    <div class="search-container">
+
+        <form class="search-box" id="searchForm">
+
+            <input
+                id="searchInput"
+                type="text"
+                autocomplete="off"
+                placeholder="Try: white hair blue eyes anime character"
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+        <div class="quick">
+
+            <button onclick="quickSearch('anime character')">
+                Anime Character
+            </button>
+
+            <button onclick="quickSearch('anime girl')">
+                Anime Girl
+            </button>
+
+            <button onclick="quickSearch('anime boy')">
+                Anime Boy
+            </button>
+
+            <button onclick="quickSearch('anime wallpaper')">
+                Wallpaper
+            </button>
+
+            <button onclick="quickSearch('blue hair anime')">
+                Blue Hair
+            </button>
+
+            <button onclick="quickSearch('red eyes anime')">
+                Red Eyes
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="status" id="status"></div>
+
+<main id="gallery" class="gallery"></main>
+
+
+<footer>
+    Images are retrieved from
+    <a href="https://commons.wikimedia.org/" target="_blank">
+        Wikimedia Commons
+    </a>.
+    Check each file's license before reusing an image.
+</footer>
+
+
+<!-- ================= MODAL ================= -->
+
+<div class="modal" id="modal">
+
+    <div class="modal-box">
+
+        <img
+            id="modalImage"
+            class="modal-image"
+            src=""
+            alt=""
+        >
+
+        <div class="modal-content">
+
+            <div id="modalTitle" class="modal-title"></div>
+
+            <div id="modalInfo" class="modal-info"></div>
+
+            <div class="modal-buttons">
+
+                <a
+                    id="sourceButton"
+                    class="primary"
+                    href="#"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Open Source
+                </a>
+
+                <a
+                    id="imageButton"
+                    href="#"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Open Original Image
+                </a>
+
+                <button
+                    class="close-button"
+                    onclick="closeModal()"
+                >
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   ANIMEVAULT
+   Wikimedia Commons Image Search
+===================================================== */
+
+
+/* ---------- Elements ---------- */
+
+const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("searchInput");
+const gallery = document.getElementById("gallery");
+const statusBox = document.getElementById("status");
+
+const modal = document.getElementById("modal");
+const modalImage = document.getElementById("modalImage");
+const modalTitle = document.getElementById("modalTitle");
+const modalInfo = document.getElementById("modalInfo");
+
+const sourceButton = document.getElementById("sourceButton");
+const imageButton = document.getElementById("imageButton");
+
+
+/* ---------- API ---------- */
+
+const API =
+    "https://commons.wikimedia.org/w/api.php";
+
+
+/* ---------- Search ---------- */
+
+searchForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const query = searchInput.value.trim();
+
+    if (!query) {
+        searchInput.focus();
+        return;
+    }
+
+    searchImages(query);
+
+});
+
+
+/* ---------- Quick Search ---------- */
+
+function quickSearch(query) {
+
+    searchInput.value = query;
+
+    searchImages(query);
+
+}
+
+
+/* ---------- Random Search ---------- */
+
+function randomSearch() {
+
+    const searches = [
+
+        "anime character",
+        "anime girl",
+        "anime boy",
+        "anime warrior",
+        "anime fantasy character",
+        "anime magic",
+        "anime sword",
+        "anime dragon",
+        "anime wallpaper",
+        "anime illustration",
+        "blue hair anime",
+        "red eyes anime",
+        "white hair anime",
+        "black hair anime"
+
+    ];
+
+    const query =
+        searches[Math.floor(Math.random() * searches.length)];
+
+    searchInput.value = query;
+
+    searchImages(query);
+
+}
+
+
+/* =====================================================
+   MAIN SEARCH FUNCTION
+===================================================== */
+
+async function searchImages(query) {
+
+    gallery.innerHTML = "";
+
+    statusBox.innerHTML = `
+        <div class="loading">
+            <div class="spinner"></div>
+            Searching for "${escapeHTML(query)}"...
+        </div>
+    `;
+
+    try {
+
+        const params = new URLSearchParams({
+
+            action: "query",
+
+            generator: "search",
+
+            gsrsearch: query,
+
+            gsrnamespace: "6",
+
+            gsrlimit: "40",
+
+            prop: "imageinfo|info",
+
+            iiprop: "url|size|mime|extmetadata",
+
+            iiurlwidth: "700",
+
+            inprop: "url",
+
+            format: "json",
+
+            origin: "*"
+
+        });
+
+
+        const url = API + "?" + params.toString();
+
+
+        const response = await fetch(url);
+
+
+        if (!response.ok) {
+            throw new Error(
+                "HTTP error: " + response.status
+            );
+        }
+
+
+        const data = await response.json();
+
+
+        if (!data.query || !data.query.pages) {
+
+            showEmpty(
+                "No images found",
+                "Try a different search."
+            );
+
+            return;
+        }
+
+
+        const pages =
+            Object.values(data.query.pages);
+
+
+        const images = pages.filter(page => {
+
+            if (!page.imageinfo) {
+                return false;
+            }
+
+            const info = page.imageinfo[0];
+
+            return (
+                info.mime &&
+                info.mime.startsWith("image/") &&
+                info.thumburl
+            );
+
+        });
+
+
+        if (images.length === 0) {
+
+            showEmpty(
+                "No usable images found",
+                "Try another search phrase."
+            );
+
+            return;
+        }
+
+
+        statusBox.innerHTML =
+            `Found ${images.length} images for "${escapeHTML(query)}".`;
+
+
+        images.forEach(createCard);
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        statusBox.innerHTML = "";
+
+        gallery.innerHTML = `
+            <div class="empty">
+                <h2>Search failed</h2>
+                <p>
+                    Your browser could not connect to Wikimedia Commons.
+                </p>
+                <br>
+                <p>
+                    Check your internet connection and try again.
+                </p>
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE IMAGE CARD
+===================================================== */
+
+function createCard(page) {
+
+    const info =
+        page.imageinfo[0];
+
+    const metadata =
+        info.extmetadata || {};
+
+
+    const title =
+        cleanTitle(page.title);
+
+
+    const creator =
+        getMetadata(
+            metadata,
+            "Artist"
+        ) ||
+        getMetadata(
+            metadata,
+            "Creator"
+        ) ||
+        "Unknown creator";
+
+
+    const license =
+        getMetadata(
+            metadata,
+            "LicenseShortName"
+        ) ||
+        "License information available on source page";
+
+
+    const card =
+        document.createElement("article");
+
+
+    card.className = "card";
+
+
+    const image =
+        document.createElement("img");
+
+
+    image.loading = "lazy";
+
+    image.src =
+        info.thumburl;
+
+    image.alt =
+        title;
+
+    image.onerror = function() {
+
+        card.remove();
+
+    };
+
+
+    const overlay =
+        document.createElement("div");
+
+
+    overlay.className =
+        "card-overlay";
+
+
+    overlay.innerHTML = `
+
+        <div class="card-title">
+            ${escapeHTML(title)}
+        </div>
+
+        <div class="card-source">
+            ${escapeHTML(stripHTML(creator))}
+        </div>
+
+    `;
+
+
+    card.appendChild(image);
+
+    card.appendChild(overlay);
+
+
+    card.addEventListener(
+        "click",
+        () => openModal(
+            title,
+            info,
+            creator,
+            license,
+            page.fullurl
+        )
+    );
+
+
+    gallery.appendChild(card);
+
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+function openModal(
+    title,
+    info,
+    creator,
+    license,
+    source
+) {
+
+    modalImage.src =
+        info.thumburl ||
+        info.url;
+
+    modalImage.alt =
+        title;
+
+
+    modalTitle.textContent =
+        title;
+
+
+    modalInfo.innerHTML = `
+
+        <strong>Creator:</strong>
+        ${escapeHTML(stripHTML(creator))}
+
+        <br>
+
+        <strong>License:</strong>
+        ${escapeHTML(stripHTML(license))}
+
+    `;
+
+
+    sourceButton.href =
+        source;
+
+
+    imageButton.href =
+        info.url;
+
+
+    modal.classList.add("active");
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* ---------- Close ---------- */
+
+function closeModal() {
+
+    modal.classList.remove("active");
+
+    document.body.style.overflow =
+        "";
+
+    modalImage.src =
+        "";
+
+}
+
+
+/* ---------- Click outside ---------- */
+
+modal.addEventListener(
+    "click",
+    function(event) {
+
+        if (event.target === modal) {
+            closeModal();
+        }
+
+    }
+);
+
+
+/* ---------- Escape key ---------- */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape" &&
+            modal.classList.contains("active")
+        ) {
+            closeModal();
+        }
+
+    }
+);
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function cleanTitle(title) {
+
+    return title
+        .replace(/^File:/i, "")
+        .replace(/\.[a-zA-Z0-9]+$/, "")
+        .replace(/_/g, " ");
+
+}
+
+
+function getMetadata(
+    metadata,
+    key
+) {
+
+    if (
+        !metadata[key] ||
+        !metadata[key].value
+    ) {
+        return "";
+    }
+
+    return metadata[key].value;
+
+}
+
+
+function stripHTML(text) {
+
+    if (!text) {
+        return "";
+    }
+
+    const temp =
+        document.createElement("div");
+
+    temp.innerHTML =
+        text;
+
+    return temp.textContent ||
+           temp.innerText ||
+           "";
+
+}
+
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function showEmpty(
+    title,
+    message
+) {
+
+    statusBox.innerHTML = "";
+
+    gallery.innerHTML = `
+
+        <div class="empty">
+
+            <h2>
+                ${escapeHTML(title)}
+            </h2>
+
+            <p>
+                ${escapeHTML(message)}
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   STARTUP
+===================================================== */
+
+searchInput.value =
+    "anime character";
+
+searchImages(
+    "anime character"
+);
+
+</script>
+
+</body>
+</html>
+
